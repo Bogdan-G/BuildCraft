@@ -93,7 +93,7 @@ public class BlockMiner {
 			int meta = world.getBlockMetadata(x, y, z);
 
 			BlockEvent.BreakEvent breakEvent = new BlockEvent.BreakEvent(x, y, z, world, block, meta,
-					CoreProxy.proxy.getBuildCraftPlayer((WorldServer) world).get());
+					CoreProxy.proxy.getBuildCraftPlayer((WorldServer) owner.getWorldObj(), owner.xCoord, owner.yCoord, owner.zCoord).get());
 			MinecraftForge.EVENT_BUS.post(breakEvent);
 
 			if (!breakEvent.isCanceled()) {
