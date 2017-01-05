@@ -29,6 +29,9 @@ archivesBaseName = "buildcraft" // the name that all artifacts will use as a bas
 ext.mcModInfo = new groovy.json.JsonSlurper().parse(file("buildcraft_resources/mcmod.info"))
 ext.priv = parseConfig(file('private.properties'))
 
+sourceCompatibility = 7
+targetCompatibility = 7
+
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10" // McVersion-ForgeVersion     this variable is later changed to contain only the MC version, while the apiVersion variable is used for the forge version.  Yeah its stupid, and will be changed eentually.
 
@@ -123,15 +126,15 @@ task sourceJar(type: Jar) {
 }
 
 // add api classes to javadoc
-javadoc {
+/*javadoc {
     source += sourceSets.api.allSource
-}
+}*/
 
 // add a javadoc jar
-task javadocJar(type: Jar, dependsOn: javadoc) {
+/*task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from 'build/docs/javadoc'
-}
+}*/
 
 // because the normal output has been made to be obfuscated
 task deobfJar(type: Jar) {
@@ -249,7 +252,8 @@ checkstyle {
 checkstyleApi.exclude 'cofh/**'
 
 // make sure all of these happen when we run build
-build.dependsOn sourceJar, javadocJar, deobfJar, apiJar
+//build.dependsOn sourceJar, javadocJar, deobfJar, apiJar
+build.dependsOn sourceJar, deobfJar, apiJar
 
 // --------------------
 // maven section
@@ -263,8 +267,8 @@ configurations {
 
 dependencies {
     // dependency in deployerJars, for maven deployment. see definition in mavenDeployer{} below
-    deployerJars "org.apache.maven.wagon:wagon-ssh:2.2"
-    sshAntTask 'org.apache.ant:ant-jsch:1.9.6', 'com.jcraft:jsch:0.1.53'
+    //deployerJars "org.apache.maven.wagon:wagon-ssh:2.2"
+    //sshAntTask 'org.apache.ant:ant-jsch:1.9.6', 'com.jcraft:jsch:0.1.53'
 }
 
 clean{
@@ -275,7 +279,7 @@ clean{
 artifacts {
     // the default jar is already here by default
     archives sourceJar
-    archives javadocJar
+    //archives javadocJar
     archives deobfJar
     archives apiJar
 
@@ -289,7 +293,7 @@ artifacts {
     archives roboticsJar
 }
 
-def sftp(String subPath, Closure antFileset = {}) {
+/*def sftp(String subPath, Closure antFileset = {}) {
     ant {
         taskdef(name: 'scp', classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
                 classpath: configurations.sshAntTask.asPath)
@@ -306,9 +310,9 @@ def sftp(String subPath, Closure antFileset = {}) {
             antFileset()
         }
     }
-}
+}*/
 
-task upload(dependsOn: build) {
+/*task upload(dependsOn: build) {
     description = 'Update files on remote server.'
     doFirst {
         sftp("") {
@@ -318,13 +322,13 @@ task upload(dependsOn: build) {
             fileset(dir: 'modules')
         }
     }
-}
+}*/
 
 
-if (ext.priv == null)
-    upload.enabled = false;
+/*if (ext.priv == null)
+    upload.enabled = false;*/
 
-uploadArchives {
+/*uploadArchives {
     // make sure this happens after reobfuscation
     dependsOn 'reobf'
 
@@ -405,4 +409,4 @@ uploadArchives {
             add project.repositories.mavenLocal()
         }
     }
-}
+}*/
