@@ -13,8 +13,6 @@ import net.minecraft.item.ItemStack;
 
 import buildcraft.api.robots.AIRobot;
 import buildcraft.api.robots.EntityRobotBase;
-import buildcraft.core.lib.inventory.ITransactor;
-import buildcraft.core.lib.inventory.Transactor;
 import buildcraft.core.lib.inventory.filters.AggregateFilter;
 import buildcraft.core.lib.inventory.filters.IStackFilter;
 import buildcraft.robotics.statements.ActionRobotFilterTool;
@@ -79,15 +77,11 @@ public class AIRobotFetchAndEquipItemStack extends AIRobot {
 			return false;
 		}
 
-		ITransactor trans = Transactor.getTransactorFor(tileInventory);
-
-		ItemStack itemFound = trans.remove(filter, robot.getDockingStation().getItemInputSide(), true);
-
-		if (itemFound != null) {
-			robot.setItemInUse(itemFound);
-			return true;
+		ItemStack possible = AIRobotLoad.takeSingle(robot.getDockingStation(), filter, true);
+		if (possible == null) {
+		    return false;
 		}
-
-		return false;
+		robot.setItemInUse(possible);
+		return true;
 	}
 }
