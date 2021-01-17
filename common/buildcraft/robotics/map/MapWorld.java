@@ -145,7 +145,9 @@ public class MapWorld {
 		long id = MapUtils.getIDFromCoords(rchunk.xPosition, rchunk.zPosition);
 		MapChunk chunk = getChunk(rchunk.xPosition, rchunk.zPosition);
 		chunk.update(rchunk);
-		updatedChunks.add(id);
+		synchronized (updatedChunks) {
+	        updatedChunks.add(id);
+        }
 		synchronized (timeToUpdate) {
 			timeToUpdate.remove(rchunk);
 		}

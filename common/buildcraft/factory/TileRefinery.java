@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team
+ * Copyright (c) 2011-2017, SpaceToad and the BuildCraft Team
  * http://www.mod-buildcraft.com
  * <p/>
  * BuildCraft is distributed under the terms of the Minecraft Mod Public
@@ -101,11 +101,15 @@ public class TileRefinery extends TileBuildCraft implements IFluidHandler, IHasW
 			return;
 		}
 
-		if (getBattery().useEnergy(craftingResult.energyCost, craftingResult.energyCost, false) > 0) {
-			CraftingResult<FluidStack> r = currentRecipe.craft(this, false);
+		if (getBattery().useEnergy(craftingResult.energyCost, craftingResult.energyCost, true) > 0) {
+			CraftingResult<FluidStack> r = currentRecipe.craft(this, true);
 			if (r != null && r.crafted != null) {
-			    // Shouldn't really happen, but its not properly documented
-			    result.fill(r.crafted.copy(), true);
+				getBattery().useEnergy(craftingResult.energyCost, craftingResult.energyCost, false);
+				r = currentRecipe.craft(this, false);
+				if (r != null && r.crafted != null) {
+					// Shouldn't really happen, but its not properly documented
+					result.fill(r.crafted.copy(), true);
+				}
 			}
 		}
 	}

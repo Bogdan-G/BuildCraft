@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team
+ * Copyright (c) 2011-2017, SpaceToad and the BuildCraft Team
  * http://www.mod-buildcraft.com
  * <p/>
  * BuildCraft is distributed under the terms of the Minecraft Mod Public
@@ -194,18 +194,22 @@ public class StackHelper {
 		if (a.getItem() != b.getItem()) {
 			return false;
 		}
-		if (matchDamage && a.getHasSubtypes()) {
-			if (!isWildcard(a) && !isWildcard(b)) {
-				if (a.getItemDamage() != b.getItemDamage()) {
-					return false;
-				}
-			}
+
+		if (isWildcard(a) || isWildcard(b)) {
+			return true;
 		}
-		if (matchNBT) {
-			if (a.stackTagCompound != null && !a.stackTagCompound.equals(b.stackTagCompound)) {
+
+		if (matchDamage && a.getHasSubtypes()) {
+			if (a.getItemDamage() != b.getItemDamage()) {
 				return false;
 			}
 		}
+		if (matchNBT) {
+			if (!ItemStack.areItemStackTagsEqual(a, b)) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 

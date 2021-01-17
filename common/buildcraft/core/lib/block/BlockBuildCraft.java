@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team
+ * Copyright (c) 2011-2017, SpaceToad and the BuildCraft Team
  * http://www.mod-buildcraft.com
  * <p/>
  * BuildCraft is distributed under the terms of the Minecraft Mod Public
@@ -167,7 +167,11 @@ public abstract class BlockBuildCraft extends BlockContainer {
 
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconAbsolute(int side, int metadata) {
-		return icons[metadata] == null ? icons[0][side] : icons[metadata][side];
+		if (metadata < 0 || metadata >= icons.length || icons[metadata] == null) {
+			return icons[0][side];
+		} else {
+			return icons[metadata][side];
+		}
 	}
 
 	@Override

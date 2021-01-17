@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team
+ * Copyright (c) 2011-2017, SpaceToad and the BuildCraft Team
  * http://www.mod-buildcraft.com
  * <p/>
  * BuildCraft is distributed under the terms of the Minecraft Mod Public
@@ -33,6 +33,7 @@ import net.minecraftforge.fluids.IFluidBlock;
 
 import buildcraft.BuildCraftCore;
 import buildcraft.BuildCraftEnergy;
+import buildcraft.core.lib.block.BlockBuildCraftFluid;
 
 public final class OilPopulate {
 
@@ -65,7 +66,6 @@ public final class OilPopulate {
 	}
 
 	public void generateOil(World world, Random rand, int chunkX, int chunkZ) {
-
 		// shift to world coordinates
 		int x = chunkX * 16 + 8 + rand.nextInt(16);
 		int z = chunkZ * 16 + 8 + rand.nextInt(16);
@@ -73,7 +73,7 @@ public final class OilPopulate {
 		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 
 		// Do not generate oil in the End or Nether
-		if (excludedBiomes.contains(biome.biomeID)) {
+		if (excludedBiomes.contains(biome.biomeID) || BlockBuildCraftFluid.isFluidExplosive(world, x, z)) {
 			return;
 		}
 
@@ -130,6 +130,10 @@ public final class OilPopulate {
 
 			// Generate a spherical cave deposit
 			int wellY = 20 + rand.nextInt(10);
+
+			if (wellY > groundLevel) {
+				return;
+			}
 
 			int radius;
 			if (type == GenType.LARGE) {
