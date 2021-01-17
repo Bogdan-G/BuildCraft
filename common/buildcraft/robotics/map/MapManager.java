@@ -53,7 +53,7 @@ public class MapManager implements Runnable {
 	private boolean doUpdate(MapWorld world, Chunk chunk) {
 		int x = chunk.xPosition;
 		int z = chunk.zPosition;
-		long updateTime = (new Date()).getTime() - UPDATE_DELAY;
+		long updateTime = System.nanoTime() - UPDATE_DELAY*1000000L;
 		return world.getUpdateTime(x, z) < updateTime || !world.hasChunk(x, z);
 	}
 
@@ -73,7 +73,7 @@ public class MapManager implements Runnable {
 
 	@SubscribeEvent
 	public void tickDelayedWorlds(TickEvent.WorldTickEvent event) {
-		if (event.phase == TickEvent.Phase.END && event.side == Side.SERVER) {
+		if (event.side == Side.SERVER && event.phase == TickEvent.Phase.END) {
 			MapWorld w = worldMap.get(event.world);
 			if (w != null) {
 				w.tick();
@@ -135,18 +135,18 @@ public class MapManager implements Runnable {
 
 	@Override
 	public void run() {
-		lastSaveTime = (new Date()).getTime();
+		lastSaveTime = System.nanoTime();
 
 		while (!stop) {
-			long now = (new Date()).getTime();
+			long now = System.nanoTime();
 
-			if (now - lastSaveTime > 120000) {
+			if (now - lastSaveTime > 300000*1000000L) {//120sec -> 300sec
 				saveAllWorlds();
 				lastSaveTime = now;
 			}
 
 			try {
-				Thread.sleep(4000);
+				Thread.sleep(10000);//4000 -> 10000
 			} catch (Exception e) {
 
 			}

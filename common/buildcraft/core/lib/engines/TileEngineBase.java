@@ -291,7 +291,7 @@ public abstract class TileEngineBase extends TileBuildCraft implements IPipeConn
 
 		if (!isRedstonePowered) {
 			currentOutput = 0;
-		} else if (isRedstonePowered && isActive()) {
+		} else if (/*isRedstonePowered && */isActive()) {
 			sendPower();
 		}
 	}
@@ -372,7 +372,7 @@ public abstract class TileEngineBase extends TileBuildCraft implements IPipeConn
 		if (!isRedstonePowered) {
 			if (energy >= 10) {
 				energy -= 10;
-			} else if (energy < 10) {
+			} else/* if (energy < 10)*/ {
 				energy = 0;
 			}
 		}

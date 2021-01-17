@@ -41,7 +41,7 @@ public abstract class GenLayerBiomeReplacer extends GenLayer {
 		this.noiseScale = noiseScale;
 		this.noiseThreshold = noiseThreshold;
 		this.newBiomeId = newBiomeId;
-		Random rand = new Random(worldSeed);
+		Random rand = new org.bogdang.modifications.random.XSTR(worldSeed);
 		xOffset = rand.nextInt(OFFSET_RANGE) - (OFFSET_RANGE / 2);
 		zOffset = rand.nextInt(OFFSET_RANGE) - (OFFSET_RANGE / 2);
 	}

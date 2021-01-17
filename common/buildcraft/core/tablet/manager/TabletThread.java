@@ -14,7 +14,7 @@ public class TabletThread implements Runnable {
 
 	public TabletThread(TabletBase tablet) {
 		this.tablet = tablet;
-		lastTickReceivedDate = begunTickDate = (new Date()).getTime();
+		lastTickReceivedDate = begunTickDate = System.nanoTime();//Bogdan-G: emm..., why Date?
 	}
 
 	public TabletBase getTablet() {
@@ -26,15 +26,15 @@ public class TabletThread implements Runnable {
 		isRunning = true;
 		while (isRunning) {
 			if (ticksLeft > 0.0F) {
-				begunTickDate = (new Date()).getTime();
+				begunTickDate = System.nanoTime();
 				tablet.tick(ticksLeft);
-				float timeElapsed = (float) (lastTickReceivedDate - begunTickDate) / 1000.0F;
-				if (timeElapsed > 0) {
+				float timeElapsed = (float) (lastTickReceivedDate - begunTickDate) / 1000.00000F;
+				if (timeElapsed > 0.00000f) {
 					ticksLeft -= timeElapsed;
 				}
 			} else {
 				try {
-					Thread.sleep(1);
+					Thread.sleep(2, 500000);
 				} catch (Exception e) {
 				}
 			}
@@ -47,6 +47,6 @@ public class TabletThread implements Runnable {
 
 	public void tick(float time) {
 		ticksLeft += time;
-		lastTickReceivedDate = (new Date()).getTime();
+		lastTickReceivedDate = System.nanoTime();
 	}
 }

@@ -61,9 +61,9 @@ public class RenderingEntityBlocks implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
-		if (block.getRenderType() == BuildCraftCore.blockByEntityModel) {
+		/*if (block.getRenderType() == BuildCraftCore.blockByEntityModel) {
 			// renderblocks.renderStandardBlock(block, i, j, k);
-		}
+		}*/
 
 		return true;
 	}

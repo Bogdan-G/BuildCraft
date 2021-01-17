@@ -20,6 +20,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -569,7 +570,8 @@ public class TileQuarry extends TileAbstractBuilder implements IHasWork, ISidedI
 
 		if (xSize < 3 || zSize < 3 || (chunkTicket != null && ((xSize * zSize) >> 8) >= chunkTicket.getMaxChunkListDepth())) {
 			if (placedBy != null) {
-				placedBy.addChatMessage(new ChatComponentTranslation("chat.buildcraft.quarry.tooSmall",
+				if (placedBy instanceof EntityPlayerMP && ((EntityPlayerMP) placedBy).playerNetServerHandler == null) placedBy = null;
+				else placedBy.addChatMessage(new ChatComponentTranslation("chat.buildcraft.quarry.tooSmall",
 						xSize, zSize,
 						chunkTicket != null ? chunkTicket.getMaxChunkListDepth() : 0));
 			}
@@ -869,7 +871,8 @@ public class TileQuarry extends TileAbstractBuilder implements IHasWork, ISidedI
 		}
 
 		if (placedBy != null && !(placedBy instanceof FakePlayer)) {
-			placedBy.addChatMessage(new ChatComponentTranslation(
+			if (placedBy instanceof EntityPlayerMP && ((EntityPlayerMP) placedBy).playerNetServerHandler == null) placedBy = null;
+			else placedBy.addChatMessage(new ChatComponentTranslation(
 					"chat.buildcraft.quarry.chunkloadInfo",
 					xCoord, yCoord, zCoord, chunks.size()));
 		}

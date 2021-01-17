@@ -124,7 +124,7 @@ public class BuildCraftMod {
 		public void run() {
 			while (true) {
 				try {
-					Thread.sleep(10);
+					Thread.sleep(50);//Bogdan-G: 5 times every tick? 10->50
 				} catch (Exception e) {
 
 				}

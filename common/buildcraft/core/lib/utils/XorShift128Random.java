@@ -1,13 +1,14 @@
 package buildcraft.core.lib.utils;
 
 import java.util.Random;
+import org.bogdang.modifications.random.XSTR;
 
 /**
  * Based on http://xorshift.di.unimi.it/xorshift128plus.c
  * TODO: This thing ought to have tests!
  */
-public class XorShift128Random {
-	private static final Random seed = new Random();
+public class XorShift128Random extends XSTR {
+	private static final Random seed = new XSTR();
 	private static final double DOUBLE_UNIT = 0x1.0p-53;
 	private final long[] s = new long[2];
 

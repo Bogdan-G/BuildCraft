@@ -17,9 +17,11 @@ import net.minecraft.world.IWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
+import cern.colt.map.OpenLongObjectHashMap;
+
 public class DimensionProperty implements IWorldAccess {
 
-	private final LongHashMap chunkMapping = new LongHashMap();
+	private final OpenLongObjectHashMap chunkMapping = new OpenLongObjectHashMap();
 	private final World world;
 	private final int worldHeight;
 	private final WorldProperty worldProperty;
@@ -38,12 +40,12 @@ public class DimensionProperty implements IWorldAccess {
 		if (world.getChunkProvider().chunkExists(xChunk, zChunk)) {
 			long chunkId = ChunkCoordIntPair.chunkXZ2Int(xChunk, zChunk);
 			ChunkProperty property;
-			if (!chunkMapping.containsItem(chunkId)) {
+			if (!chunkMapping.containsKey(chunkId)) {
 				property = new ChunkProperty(world, world.getHeight(), xChunk, zChunk);
-				chunkMapping.add(chunkId, property);
+				chunkMapping.put(chunkId, property);
 				load(world.getChunkFromChunkCoords(xChunk, zChunk), property);
 			} else {
-				property = (ChunkProperty) chunkMapping.getValueByKey(chunkId);
+				property = (ChunkProperty) chunkMapping.get(chunkId);
 			}
 
 			return property.get(x & 0xF, y, z & 0xF);
@@ -76,8 +78,8 @@ public class DimensionProperty implements IWorldAccess {
 		if (world.getChunkProvider().chunkExists(xChunk, zChunk)) {
 			long chunkId = ChunkCoordIntPair.chunkXZ2Int(xChunk, zChunk);
 
-			if (chunkMapping.containsItem(chunkId)) {
-				ChunkProperty property = (ChunkProperty) chunkMapping.getValueByKey(chunkId);
+			if (chunkMapping.containsKey(chunkId)) {
+				ChunkProperty property = (ChunkProperty) chunkMapping.get(chunkId);
 
 				Block block = world.getBlock(x, y, z);
 				int meta = world.getBlockMetadata(x, y, z);

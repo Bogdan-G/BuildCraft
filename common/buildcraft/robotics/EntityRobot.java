@@ -273,9 +273,9 @@ public class EntityRobot extends EntityRobotBase implements
 	}
 
 	protected void firstUpdate() {
-		if (stackRequestNBT != null) {
+		/*if (stackRequestNBT != null) {
 
-		}
+		}*/
 
 		if (!worldObj.isRemote) {
 			getRegistry().registerRobot(this);

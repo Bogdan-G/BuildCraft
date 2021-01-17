@@ -50,7 +50,7 @@ public class EntityDropParticleFX extends EntityFX {
 		this.setSize(0.01F, 0.01F);
 		this.particleGravity = 0.06F;
 		this.bobTimer = 40;
-		this.particleMaxAge = (int) (64.0D / (Math.random() * 0.8D + 0.2D));
+		this.particleMaxAge = (int) (64.0D / ((new org.bogdang.modifications.random.XSTR()).nextFloat() * 0.8D + 0.2D));
 		this.motionX = this.motionY = this.motionZ = 0.0D;
 	}
 

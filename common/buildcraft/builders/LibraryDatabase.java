@@ -8,7 +8,7 @@
  */
 package buildcraft.builders;
 
-import java.io.File;
+import java.io.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -113,7 +113,7 @@ public class LibraryDatabase {
 
 		if (!blueprintFile.exists()) {
 			try {
-				FileOutputStream f = new FileOutputStream(blueprintFile);
+				OutputStream f = new BufferedOutputStream(new FileOutputStream(blueprintFile));
 				f.write(data);
 				f.close();
 			} catch (IOException ex) {
@@ -189,7 +189,7 @@ public class LibraryDatabase {
 	public static NBTTagCompound load(File blueprintFile) {
 		if (blueprintFile != null && blueprintFile.exists()) {
 			try {
-				FileInputStream f = new FileInputStream(blueprintFile);
+				InputStream f = new BufferedInputStream(new FileInputStream(blueprintFile));
 				byte[] data = new byte[(int) blueprintFile.length()];
 				f.read(data);
 				f.close();

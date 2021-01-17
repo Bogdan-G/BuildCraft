@@ -133,11 +133,12 @@ public class Blueprint extends BlueprintBase {
 	@Override
 	public void readEntitiesFromWorld(IBuilderContext context, TileEntity anchorTile) {
 		BptContext bptContext = (BptContext) context;
-		Translation transform = new Translation();
+		//hmm, useless or TODO code?
+		/*Translation transform = new Translation();
 
 		transform.x = -context.surroundingBox().pMin().x;
 		transform.y = -context.surroundingBox().pMin().y;
-		transform.z = -context.surroundingBox().pMin().z;
+		transform.z = -context.surroundingBox().pMin().z;*/
 
 		for (Object o : context.world().loadedEntityList) {
 			Entity e = (Entity) o;

@@ -87,13 +87,13 @@ public final class OilPopulate {
 			bonus *= 20.0;
 		}
 		GenType type = GenType.NONE;
-		if (rand.nextDouble() <= 0.0004 * bonus) {
+		if (rand.nextFloat() <= 0.0004 * bonus) {
 			// 0.04%
 			type = GenType.LARGE;
-		} else if (rand.nextDouble() <= 0.001 * bonus) {
+		} else if (rand.nextFloat() <= 0.001 * bonus) {
 			// 0.1%
 			type = GenType.MEDIUM;
-		} else if (oilBiome && rand.nextDouble() <= 0.02 * bonus) {
+		} else if (oilBiome && rand.nextFloat() <= 0.02 * bonus) {
 			// 2%
 			type = GenType.LAKE;
 		}
@@ -164,7 +164,7 @@ public final class OilPopulate {
 			}
 			generateSurfaceDeposit(world, rand, biome, wellX, groundLevel, wellZ, lakeRadius);
 
-			boolean makeSpring = type == GenType.LARGE && BuildCraftEnergy.spawnOilSprings && BuildCraftCore.springBlock != null && (BuildCraftCore.debugWorldgen || rand.nextDouble() <= 0.25);
+			boolean makeSpring = type == GenType.LARGE && BuildCraftEnergy.spawnOilSprings && BuildCraftCore.springBlock != null && (BuildCraftCore.debugWorldgen || rand.nextFloat() <= 0.25);
 
 			// Generate Spout
 			int baseY;
@@ -209,7 +209,7 @@ public final class OilPopulate {
 	}
 
 	private void generateSurfaceDeposit(World world, Random rand, BiomeGenBase biome, int x, int y, int z, int radius) {
-		int depth = rand.nextDouble() < 0.5 ? 1 : 2;
+		int depth = rand.nextFloat() < 0.5 ? 1 : 2;
 
 		// Center
 		setOilColumnForLake(world, biome, x, y, z, depth, 2);

@@ -260,10 +260,10 @@ build.dependsOn sourceJar, deobfJar, apiJar
 // -------------------
 
 // create the deployerJars dependency configuration
-configurations {
+/*configurations {
     deployerJars
     sshAntTask
-}
+}*/
 
 dependencies {
     // dependency in deployerJars, for maven deployment. see definition in mavenDeployer{} below
@@ -410,3 +410,5 @@ artifacts {
         }
     }
 }*/
+checkstyleApi.enabled = false;
+checkstyleMain.enabled = false;

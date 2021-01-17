@@ -81,7 +81,8 @@ public class Version implements Runnable {
 	}
 
 	public static void versionCheck() {
-		try {
+		//no need network connect
+		/*try {
 
 			if ("0.0.0".equals(VERSION)) {
 				return;
@@ -137,7 +138,7 @@ public class Version implements Runnable {
 			BCLog.logger.warn("Unable to read from remote version authority.");
 			BCLog.logger.warn(e.toString());
 			currentVersion = EnumUpdateState.CONNECTION_ERROR;
-		}
+		}*/
 	}
 
 	public static String[] getChangelog() {
@@ -150,7 +151,8 @@ public class Version implements Runnable {
 
 	public static String[] grabChangelog(String version) {
 
-		try {
+		//no need network connect
+		/*try {
 			String location = REMOTE_CHANGELOG_ROOT + version;
 			HttpURLConnection conn = null;
 			while (location != null && !location.isEmpty()) {
@@ -190,7 +192,7 @@ public class Version implements Runnable {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			BCLog.logger.warn("Unable to read changelog from remote site.");
-		}
+		}*/
 
 		return new String[]{String.format("Unable to retrieve changelog for %s %s", DefaultProps.MOD, version)};
 	}
@@ -199,11 +201,12 @@ public class Version implements Runnable {
 	public void run() {
 
 		int count = 0;
-		currentVersion = null;
+		//no need network connect
+		//currentVersion = null;
 
-		BCLog.logger.info("Beginning version check");
+		BCLog.logger.info("Skip: Beginning version check");
 
-		try {
+		/*try {
 			while ((count < 3) && ((currentVersion == null) || (currentVersion == EnumUpdateState.CONNECTION_ERROR))) {
 				versionCheck();
 				count++;
@@ -219,7 +222,7 @@ public class Version implements Runnable {
 
 		if (currentVersion == EnumUpdateState.CONNECTION_ERROR) {
 			BCLog.logger.info("Version check failed");
-		}
+		}*/
 
 	}
 

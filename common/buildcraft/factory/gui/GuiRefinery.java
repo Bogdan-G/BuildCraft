@@ -86,7 +86,7 @@ public class GuiRefinery extends GuiAdvancedInterface {
 			} else {
 				if (position == 0) {
 					container.setFilter(position, container.refinery.tanks[0].getFluidType());
-				} else if (position == 1) {
+				} else/* if (position == 1)*/ {
 					container.setFilter(position, container.refinery.tanks[1].getFluidType());
 				}
 			}

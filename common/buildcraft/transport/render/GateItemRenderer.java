@@ -100,7 +100,7 @@ public class GateItemRenderer implements IItemRenderer {
 			iterations = 4;
 		}
 
-		Random rand = new Random(187L);
+		Random rand = new org.bogdang.modifications.random.XSTR(187L);
 
 		float offsetZ = 0.0625F + 0.021875F;
 
@@ -134,7 +134,7 @@ public class GateItemRenderer implements IItemRenderer {
 			iterations = 4;
 		}
 
-		Random rand = new Random(187L);
+		Random rand = new org.bogdang.modifications.random.XSTR(187L);
 
 		for (int ii = 0; ii < iterations; ++ii) {
 			GL11.glPushMatrix();

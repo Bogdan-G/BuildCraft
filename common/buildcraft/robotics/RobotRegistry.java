@@ -33,6 +33,8 @@ import buildcraft.api.robots.IRobotRegistry;
 import buildcraft.api.robots.ResourceId;
 import buildcraft.api.robots.RobotManager;
 
+import cern.colt.map.OpenLongObjectHashMap;
+
 public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 
 	protected World world;
@@ -40,11 +42,11 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 
 	private long nextRobotID = Long.MIN_VALUE;
 
-	private final LongHashMap robotsLoaded = new LongHashMap();
+	private final OpenLongObjectHashMap robotsLoaded = new OpenLongObjectHashMap();
 	private final HashSet<EntityRobot> robotsLoadedSet = new HashSet<EntityRobot>();
 	private final HashMap<ResourceId, Long> resourcesTaken = new HashMap<ResourceId, Long>();
-	private final LongHashMap resourcesTakenByRobot = new LongHashMap();
-	private final LongHashMap stationsTakenByRobot = new LongHashMap();
+	private final OpenLongObjectHashMap resourcesTakenByRobot = new OpenLongObjectHashMap();
+	private final OpenLongObjectHashMap stationsTakenByRobot = new OpenLongObjectHashMap();
 
 	public RobotRegistry(String id) {
 		super(id);
@@ -66,7 +68,7 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 		if (robot.getRobotId() == EntityRobotBase.NULL_ROBOT_ID) {
 			((EntityRobot) robot).setUniqueRobotId(getNextRobotId());
 		}
-		if (robotsLoaded.containsItem(robot.getRobotId())) {
+		if (robotsLoaded.containsKey(robot.getRobotId())) {
 			BCLog.logger.warn("Robot with id %d was not unregistered properly", robot.getRobotId());
 		}
 
@@ -74,21 +76,21 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 	}
 
 	private HashSet<ResourceId> getResourcesTakenByRobot(long robotId) {
-		return (HashSet<ResourceId>) resourcesTakenByRobot.getValueByKey(robotId);
+		return (HashSet<ResourceId>) resourcesTakenByRobot.get(robotId);
 	}
 
 	private HashSet<StationIndex> getStationsTakenByRobot(long robotId) {
-		return (HashSet<StationIndex>) stationsTakenByRobot.getValueByKey(robotId);
+		return (HashSet<StationIndex>) stationsTakenByRobot.get(robotId);
 	}
 
 
 	private void addRobotLoaded(EntityRobot robot) {
-		robotsLoaded.add(robot.getRobotId(), robot);
+		robotsLoaded.put(robot.getRobotId(), robot);
 		robotsLoadedSet.add(robot);
 	}
 
 	private void removeRobotLoaded(EntityRobot robot) {
-		robotsLoaded.remove(robot.getRobotId());
+		robotsLoaded.removeKey(robot.getRobotId());
 		robotsLoadedSet.remove(robot);
 	}
 
@@ -110,8 +112,8 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 
 	@Override
 	public EntityRobot getLoadedRobot(long id) {
-		if (robotsLoaded.containsItem(id)) {
-			return (EntityRobot) robotsLoaded.getValueByKey(id);
+		if (robotsLoaded.containsKey(id)) {
+			return (EntityRobot) robotsLoaded.get(id);
 		} else {
 			return null;
 		}
@@ -130,7 +132,7 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 
 		long robotId = resourcesTaken.get(resourceId);
 
-		if (robotsLoaded.containsItem(robotId) && !((EntityRobot) robotsLoaded.getValueByKey(robotId)).isDead) {
+		if (robotsLoaded.containsKey(robotId) && !((EntityRobot) robotsLoaded.get(robotId)).isDead) {
 			return robotId;
 		} else {
 			// If the robot is either not loaded or dead, the resource is not
@@ -144,10 +146,10 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 	public synchronized EntityRobot robotTaking(ResourceId resourceId) {
 		long robotId = robotIdTaking(resourceId);
 
-		if (robotId == EntityRobotBase.NULL_ROBOT_ID || !robotsLoaded.containsItem(robotId)) {
+		if (robotId == EntityRobotBase.NULL_ROBOT_ID || !robotsLoaded.containsKey(robotId)) {
 			return null;
 		} else {
-			return (EntityRobot) robotsLoaded.getValueByKey(robotId);
+			return (EntityRobot) robotsLoaded.get(robotId);
 		}
 	}
 
@@ -169,8 +171,8 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 		if (!resourcesTaken.containsKey(resourceId)) {
 			resourcesTaken.put(resourceId, robotId);
 
-			if (!resourcesTakenByRobot.containsItem(robotId)) {
-				resourcesTakenByRobot.add(robotId, new HashSet<ResourceId>());
+			if (!resourcesTakenByRobot.containsKey(robotId)) {
+				resourcesTakenByRobot.put(robotId, new HashSet<ResourceId>());
 			}
 
 			getResourcesTakenByRobot(robotId).add(resourceId);
@@ -209,7 +211,7 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 	private synchronized void releaseResources(EntityRobotBase robot, boolean forceAll, boolean resetEntities) {
 		markDirty();
 
-		if (resourcesTakenByRobot.containsItem(robot.getRobotId())) {
+		if (resourcesTakenByRobot.containsKey(robot.getRobotId())) {
 			HashSet<ResourceId> resourceSet = (HashSet<ResourceId>) getResourcesTakenByRobot(robot.getRobotId())
 					.clone();
 
@@ -217,10 +219,10 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 				release(id);
 			}
 
-			resourcesTakenByRobot.remove(robot.getRobotId());
+			resourcesTakenByRobot.removeKey(robot.getRobotId());
 		}
 
-		if (stationsTakenByRobot.containsItem(robot.getRobotId())) {
+		if (stationsTakenByRobot.containsKey(robot.getRobotId())) {
 			HashSet<StationIndex> stationSet = (HashSet<StationIndex>) getStationsTakenByRobot(robot.getRobotId())
 					.clone();
 
@@ -241,7 +243,7 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 			}
 
 			if (forceAll) {
-				stationsTakenByRobot.remove(robot.getRobotId());
+				stationsTakenByRobot.removeKey(robot.getRobotId());
 			}
 		}
 	}
@@ -289,7 +291,7 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 					station.robotTaking().setMainStation(null);
 				}
 			} else if (station.robotIdTaking() != EntityRobotBase.NULL_ROBOT_ID) {
-				if (stationsTakenByRobot.containsItem(station.robotIdTaking())) {
+				if (stationsTakenByRobot.containsKey(station.robotIdTaking())) {
 					getStationsTakenByRobot(station.robotIdTaking()).remove(index);
 				}
 			}
@@ -300,8 +302,8 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 
 	@Override
 	public synchronized void take(DockingStation station, long robotId) {
-		if (!stationsTakenByRobot.containsItem(robotId)) {
-			stationsTakenByRobot.add(robotId, new HashSet<StationIndex>());
+		if (!stationsTakenByRobot.containsKey(robotId)) {
+			stationsTakenByRobot.put(robotId, new HashSet<StationIndex>());
 		}
 
 		getStationsTakenByRobot(robotId).add(new StationIndex(station));
@@ -309,7 +311,7 @@ public class RobotRegistry extends WorldSavedData implements IRobotRegistry {
 
 	@Override
 	public synchronized void release(DockingStation station, long robotId) {
-		if (stationsTakenByRobot.containsItem(robotId)) {
+		if (stationsTakenByRobot.containsKey(robotId)) {
 			getStationsTakenByRobot(robotId).remove(new StationIndex(station));
 		}
 	}

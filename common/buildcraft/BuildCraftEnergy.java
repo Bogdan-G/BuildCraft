@@ -351,14 +351,14 @@ public class BuildCraftEnergy extends BuildCraftMod {
 					}
 				} else {
 					boolean found = false;
-					String biomeName = strippedId.toUpperCase();
+					String biomeName = strippedId;//Bogdan-G: equalsIgnoreCase
 
 					for (BiomeDictionary.Type t : BiomeDictionary.Type.values()) {
-						String biomeType = t.name().toUpperCase();
+						String biomeType = t.name();
 
 						for (BiomeGenBase b : BiomeDictionary.getBiomesForType(t)) {
-							if (b.biomeName.toUpperCase().equals(biomeName)
-									|| biomeType.toUpperCase().equals(biomeName)) {
+							if (b.biomeName.equalsIgnoreCase(biomeName)
+									|| biomeType.equalsIgnoreCase(biomeName)) {
 								list.add(b.biomeID);
 								found = true;
 							}

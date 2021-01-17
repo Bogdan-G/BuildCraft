@@ -35,13 +35,13 @@ public class EntityRobotEnergyParticle extends EntityFX {
 		this.motionX += vx;
 		this.motionY += vy;
 		this.motionZ += vz;
-		this.particleRed = (float) (Math.random() * 0.6);
+		this.particleRed = (float) ((new org.bogdang.modifications.random.XSTR()).nextFloat() * 0.6);
 		this.particleGreen = 0;
 		this.particleBlue = 0;
 		this.particleScale *= 0.75F;
 		this.particleScale *= size;
 		this.smokeParticleScale = this.particleScale;
-		this.particleMaxAge = (int) (16.0D / (Math.random() * 0.8D + 0.2D));
+		this.particleMaxAge = (int) (16.0D / ((new org.bogdang.modifications.random.XSTR()).nextFloat() * 0.8D + 0.2D));
 		this.particleMaxAge = (int) (this.particleMaxAge * size);
 		this.noClip = false;
 	}

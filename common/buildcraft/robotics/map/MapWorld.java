@@ -1,13 +1,13 @@
 package buildcraft.robotics.map;
 
-import java.io.File;
+import java.io.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import gnu.trove.map.hash.TLongLongHashMap;
 import gnu.trove.set.hash.TLongHashSet;
@@ -19,17 +19,22 @@ import net.minecraft.world.chunk.Chunk;
 
 import buildcraft.core.lib.utils.NBTUtils;
 
+import cern.colt.map.OpenLongObjectHashMap;
+import org.eclipse.collections.impl.map.mutable.primitive.LongLongHashMap;
+import org.eclipse.collections.impl.set.mutable.primitive.LongHashSet;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectIntHashMap;
+
 public class MapWorld {
-	private final LongHashMap regionMap;
-	private final HashMap<Chunk, Integer> timeToUpdate = new HashMap<Chunk, Integer>();
-	private final TLongLongHashMap regionUpdateTime;
-	private final TLongHashSet updatedChunks;
+	private final OpenLongObjectHashMap regionMap;
+	private final ObjectIntHashMap timeToUpdate = new ObjectIntHashMap();//<Chunk, Integer>
+	private final LongLongHashMap regionUpdateTime;
+	private final LongHashSet updatedChunks;
 	private final File location;
 
 	public MapWorld(World world, File location) {
-		regionMap = new LongHashMap();
-		regionUpdateTime = new TLongLongHashMap();
-		updatedChunks = new TLongHashSet();
+		regionMap = new OpenLongObjectHashMap();
+		regionUpdateTime = new LongLongHashMap();
+		updatedChunks = new LongHashSet();
 
 		String saveFolder = world.provider.getSaveFolder();
 		if (saveFolder == null) {
@@ -45,7 +50,7 @@ public class MapWorld {
 
 	private MapRegion getRegion(int x, int z) {
 		long id = MapUtils.getIDFromCoords(x, z);
-		MapRegion region = (MapRegion) regionMap.getValueByKey(id);
+		MapRegion region = (MapRegion) regionMap.get(id);
 		if (region == null) {
 			region = new MapRegion(x, z);
 
@@ -53,7 +58,7 @@ public class MapWorld {
 			File target = new File(location, "r" + x + "," + z + ".nbt");
 			if (target.exists()) {
 				try {
-					FileInputStream f = new FileInputStream(target);
+					InputStream f = new BufferedInputStream(new FileInputStream(target));
 					byte[] data = new byte[(int) target.length()];
 					f.read(data);
 					f.close();
@@ -67,7 +72,7 @@ public class MapWorld {
 				}
 			}
 
-			regionMap.add(id, region);
+			regionMap.put(id, region);
 		}
 		return region;
 	}
@@ -90,7 +95,7 @@ public class MapWorld {
 		}
 
 		for (long id : chunkList) {
-			MapRegion region = (MapRegion) regionMap.getValueByKey(id);
+			MapRegion region = (MapRegion) regionMap.get(id);
 			if (region == null) {
 				continue;
 			}
@@ -101,7 +106,7 @@ public class MapWorld {
 			File file = new File(location, "r" + MapUtils.getXFromID(id) + "," + MapUtils.getZFromID(id) + ".nbt");
 
 			try {
-				FileOutputStream f = new FileOutputStream(file);
+				OutputStream f = new BufferedOutputStream(new FileOutputStream(file));
 				f.write(data);
 				f.close();
 			} catch (IOException e) {
@@ -144,7 +149,7 @@ public class MapWorld {
 		synchronized (timeToUpdate) {
 			timeToUpdate.remove(rchunk);
 		}
-		regionUpdateTime.put(id, (new Date()).getTime());
+		regionUpdateTime.put(id, System.nanoTime()/1000000L);
 	}
 
 	public long getUpdateTime(int x, int z) {

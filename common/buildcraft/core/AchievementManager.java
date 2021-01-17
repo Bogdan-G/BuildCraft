@@ -24,6 +24,7 @@ public class AchievementManager {
 
 	@SubscribeEvent
 	public void onCrafting(PlayerEvent.ItemCraftedEvent event) {
+		if (event.crafting == null || event.player == null) return;
 		Item item = event.crafting.getItem();
 		int damage = event.crafting.getItemDamage();
 
